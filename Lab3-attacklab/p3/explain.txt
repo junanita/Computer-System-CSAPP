@@ -1,0 +1,7 @@
+- cookie -> char array:
+	0x1f9c03ad - > 31 66 39 63 30 33 61 64
+
+- 因为知道在调用 hexmatch 的时候会覆盖缓冲区，所以需要找到一个位置来放这八个字符
+- 查看buff: x/24x 0x55654e88
+- 发现 $0x55654ed8 这一行有8byte的空位，可以存放我们的string
+- 在injected code 里面写入

