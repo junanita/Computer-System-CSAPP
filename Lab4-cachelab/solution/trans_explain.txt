@@ -1,0 +1,158 @@
+- Why simple method not good:
+
+We can see that the first matrix starts with 6022c0, the second starts with 6422c0. This means that, for the same row of A and B, they are cached to the same set, and will cause conflict.
+
+- The cache has parameters: s = 5, E = 1, b = 5. 
+	The b=5 tells us that each line stores 2^5 = 32 bytes, or 8 integers.
+
+- So when we read A[0][0], we can read A[0][1] to A[0][7] without a single miss.
+
+- Diagonal: 
+	Since for diagonal entries, i=j, we kiced A[j] out of the cache with B[i]. So we will check for diagonal entry in each loop, store it in a temporary variable, and put it in B after the loop.
+
+- Block:
+	如果 B＝ 8， 则一定是存 M[8^n-8^(n+1)]
+
+
+Cache: 
+	 0 1 2 3 4 5 6 7 8 - Integers
+0 
+1
+2
+3
+4
+5
+6
+7 
+8
+...
+31
+|
+Sets
+
+
+
+// Simple method
+
+S 6822cc,1 miss => Sets[22]
+L 682300,8 miss => Sets[24]
+L 6822c4,4 hit 
+L 6822c0,4 hit 
+
+L 6022c0,4 miss eviction  	A00 => Sets[22]		save A00-A10
+S 6422c0,4 miss eviction  						B00 => Sets[22] when i==j, B will kick A out from cache
+L 6022c4,4 miss eviction  	A01 => Sets[22]		save A00-A10
+S 642340,4 miss 								B10 => Sets[26] save B10-B17
+L 6022c8,4 hit 			 	A02				
+S 6423c0,4 miss 								B20 => Sets[30] save B20-B27
+L 6022cc,4 hit 				A03
+S 642440,4 miss 								B30 => Sets[2]	save B30-B37
+L 6022d0,4 hit 				A04
+S 6424c0,4 miss 								B40 => Sets[6]
+L 6022d4,4 hit 				A05
+S 642540,4 miss  								B50 => Sets[10]
+L 6022d8,4 hit 				A06
+S 6425c0,4 miss  								B60	=> Sets[14]
+L 6022dc,4 hit 				A07
+S 642640,4 miss  								B70 => Sets[18]
+
+Summary: 
+For B => 26-22=4, 
+a row in B has 32 integers = 128 bytes
+one cache line has 32 bytes
+so one row in B need 4 lines in cache
+so the offset is 4(26-22)
+
+L 6022e0,4 miss 			A08 => Sets[23]
+S 6426c0,4 miss eviction 						B80 => Sets[22] save B80-B87
+L 6022e4,4 hit 
+S 642740,4 miss eviction 						B90 => Sets[26]
+L 6022e8,4 hit 
+S 6427c0,4 miss eviction 						B10,0 => Sets[30]
+L 6022ec,4 hit 
+S 642840,4 miss eviction 						B11,0 => Sets[2]
+L 6022f0,4 hit 
+S 6428c0,4 miss eviction 						B12,0 => Sets[6]
+L 6022f4,4 hit 
+S 642940,4 miss eviction  						B13,0 => Sets[10]
+L 6022f8,4 hit 
+S 6429c0,4 miss eviction  						B14,0 => Sets[10]
+L 6022fc,4 hit 
+S 642a40,4 miss eviction  						B15,0 => Sets[10]
+
+L 602300,4 miss eviction	A0,15 => Sets[24]
+S 642ac0,4 miss eviction 
+L 602304,4 hit 
+S 642b40,4 miss eviction 
+L 602308,4 hit 
+S 642bc0,4 miss eviction 
+L 60230c,4 hit 
+S 642c40,4 miss eviction 
+L 602310,4 hit 
+S 642cc0,4 miss eviction 
+L 602314,4 hit 
+S 642d40,4 miss eviction 
+L 602318,4 hit 
+S 642dc0,4 miss eviction 
+L 60231c,4 hit 
+S 642e40,4 miss eviction 
+
+L 602320,4 miss 					A0,23 => Sets[25]
+S 642ec0,4 miss eviction 
+
+
+
+
+// 64x64 matrix
+
+S 006822cc,1
+L 006822e0,8
+L 006822c4,4
+L 006822c0,4
+L 006022c0,4
+
+L 006022c4,4
+S 006423c0,4
+L 006022c8,4
+S 006424c0,4
+L 006022cc,4
+S 006425c0,4
+S 006422c0,4
+L 006023c0,4
+S 006422c4,4
+L 006023c4,4
+L 006023c8,4
+S 006424c4,4
+L 006023cc,4
+S 006425c4,4
+S 006423c4,4
+L 006024c0,4
+S 006422c8,4
+L 006024c4,4
+S 006423c8,4
+L 006024c8,4
+L 006024cc,4
+S 006425c8,4
+S 006424c8,4
+L 006025c0,4
+S 006422cc,4
+L 006025c4,4
+S 006423cc,4
+L 006025c8,4
+S 006424cc,4
+L 006025cc,4
+S 006425cc,4
+L 006026c0,4
+S 006422d0,4
+L 006026c4,4
+S 006423d0,4
+L 006026c8,4
+S 006424d0,4
+L 006026cc,4
+S 006425d0,4
+L 006027c0,4
+S 006422d4,4
+L 006027c4,4
+S 006423d4,4
+L 006027c8,4
+S 006424d4,4
