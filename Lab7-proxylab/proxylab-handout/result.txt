@@ -1,0 +1,32 @@
+*** Basic ***
+Starting tiny on 22015
+Starting proxy on 11411
+1: home.html
+   Fetching ./tiny/home.html into ./.proxy using the proxy
+   Fetching ./tiny/home.html into ./.noproxy directly from Tiny
+   Comparing the two files
+   Success: Files are identical.
+2: csapp.c
+   Fetching ./tiny/csapp.c into ./.proxy using the proxy
+   Fetching ./tiny/csapp.c into ./.noproxy directly from Tiny
+   Comparing the two files
+   Success: Files are identical.
+3: tiny.c
+   Fetching ./tiny/tiny.c into ./.proxy using the proxy
+   Fetching ./tiny/tiny.c into ./.noproxy directly from Tiny
+   Comparing the two files
+   Success: Files are identical.
+4: godzilla.jpg
+   Fetching ./tiny/godzilla.jpg into ./.proxy using the proxy
+   Fetching ./tiny/godzilla.jpg into ./.noproxy directly from Tiny
+   Comparing the two files
+Files ./.proxy/godzilla.jpg and ./.noproxy/godzilla.jpg differ
+   Failure: Files differ.
+5: tiny
+   Fetching ./tiny/tiny into ./.proxy using the proxy
+   Fetching ./tiny/tiny into ./.noproxy directly from Tiny
+   Comparing the two files
+Files ./.proxy/tiny and ./.noproxy/tiny differ
+   Failure: Files differ.
+Killing tiny and proxy
+Basic: 24 / 40
